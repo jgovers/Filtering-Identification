@@ -12,30 +12,36 @@ load('systemMatrices.mat')
  myfile = 'turbulenceData.mat';
  [parentdir,~,~]=fileparts(pwd);
  load(fullfile(parentdir,myfile))
+
  
 %% 3.6
 toc
-C_phi0  = 0;
-sig_e   = 0;
-% phi     = 0;
-var_eps = zeros(size(phiSim,2),1);
+sig_e   = sqrt(10^(-SNR/10));
 
-for i = 1:size(phiSim,2)
-    phik = phiSim{i};
-    [var_eps(i)] = AOloopMVM(G,H,C_phi0,sig_e,phik);
+var_eps = zeros(size(phiIdent,2),1);
+
+for i = 1:size(phiIdent,2)
+    phik = phiIdent{i};
+    C_phi0 = cov(phik');
+    [var_eps(i)] = AOloopMVM(G,H,C_phi0,SNR,phik);
 end
 
 %% No Control
 toc
-sigma = zeros(size(phiSim,2),1);
+sigma = zeros(size(skIdent,2),1);
 
-for i = 1:size(phiSim,2)
-    phik = phiSim{i};
+for i = 1:size(skIdent,2)
+    phik = skIdent{i};
     [sigma(i)] = AOloop_nocontrol(phik,SNR,H,G);
 end
 
 %% Kalman
-toc
+phik = phiIdent{1};
+C_phi0 = cov(phik');
+C_phi1 = covariance(phik,1);
+sig_e   = sqrt(10^(-SNR/10));
+[A,Cw,K] = computeKalmanAR(C_phi0,C_phi1,G,sig_e);
+
 
 
 %% Plots

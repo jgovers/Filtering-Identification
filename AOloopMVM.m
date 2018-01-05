@@ -1,4 +1,4 @@
-function [var_eps] = AOloopMVM(G,H,C_phi0,sig_e,phik);
+function [var_eps] = AOloopMVM(G,H,C_phi0,SNR,phik);
 % Title of function
 % IN
 % G         : measurement matrix 
@@ -12,6 +12,9 @@ function [var_eps] = AOloopMVM(G,H,C_phi0,sig_e,phik);
 
 % OUT
 % var_eps   : mean variance of the residual wavefront
+
+
+skIdent = awgn(G*phik,SNR);    
 
 
 n = size(H,1);      % dimension lifted wavefront
