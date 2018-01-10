@@ -14,14 +14,14 @@ myfile = 'turbulenceData.mat';
 [parentdir,~,~]=fileparts(pwd);
 load(fullfile(parentdir,myfile))
 toc
-% %% No Control
-% fprintf('\nCalculations without control:\n')
-% var_nc = zeros(size(phiIdent,2),1);
-% for i = 1:size(phiIdent,2)
-%     phik = phiIdent{i};
-%     [var_nc(i)] = AOloop_nocontrol(phik,SNR,H,G);
-% end
-% toc
+%% No Control
+fprintf('\nCalculations without control:\n')
+var_nc = zeros(size(phiIdent,2),1);
+for i = 1:size(phiIdent,2)
+    phik = phiIdent{i};
+    [var_nc(i)] = AOloop_nocontrol(phik,SNR,H,G);
+end
+toc
 %% Random walk model (3.6)
 fprintf('\nRandom Walk model:\n')
 sig_e   = sqrt(10^(-SNR/10));
