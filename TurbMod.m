@@ -58,8 +58,16 @@ toc
 % end
 % fprintf('\n')
 % toc
+phi = phiIdent{1};
+Nid = 3500;
+Nval = 1500;
+s = 50;
+n = 25;
+
+[At,Ct,K,vaf] = nasid(phi,Nid,Nval,s,n)
+
 %% Plots
-figure; hold on;
-plot(var_nc); plot(var_rw); plot(var_k);
-legend('Var. Tur. Wav.','Var. Res. Wav. Random Walk model','Var. Res. Wav. Kalman filter')
+% figure; hold on;
+% plot(var_nc); plot(var_rw); plot(var_k);
+% legend('Var. Tur. Wav.','Var. Res. Wav. Random Walk model','Var. Res. Wav. Kalman filter')
 
