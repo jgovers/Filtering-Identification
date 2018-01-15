@@ -2,29 +2,24 @@ function [var_eps] = AOloopAR(G,H,C_phi0,C_phi1,sig_e,phik)
 %% Initialising matrices
 n = size(H,1);          % State dimension 
 ns = size(G,1);         % Output dimension
-T = length(phik)+1;     % Number of temporal phase points
+T = length(phik);     % Number of temporal phase points
 eps_h = zeros(n,T);     % Residual wavefront with stochast
 eps = zeros(n,T);       % Residual wavefront with mean removed
-s = zeros(ns,T);       % Output data
 sigma = zeros(T,1);     % Variance of each residual wavefront measurement vector
 u_k = zeros(n,T);       % Optimal control action
 %% System information
 [A,Cw,K] = computeKalmanAR(C_phi0,C_phi1,G,sig_e);
-B = [A*H -H];
-D = [G*H zeros(72,49)];
 vare = -log10(sig_e)*20;
-varW = 0;
 %% Control loop
-for k = 2:T-2
+for k = 2:T
     %% System equations
-    eps(:,k) = phik(:,k) - H*u_k(:,k);
+    eps(:,k) = phik(:,k) - H*u_k(:,k-1);
     s = awgn(G*eps(:,k),vare);
     %% Observer and controller
-    eps_h(:,k+1) = (A-K*G)*eps_h(:,k) + B*[u_k(:,k-1); u_k(:,k)] + K*s;
-    u_k(:,k+1) = u_k(:,k) + H\eps_h(:,k+1);
-    %% Variance
-    sigma(k+1) = var(eps(:,k));
+    u_k(:,k) = H\A*(H*u_k(:,k-1) + eps_h(:,k));
+    eps_h(:,k+1) = (A-K*G)*eps_h(:,k) + A*H*u_k(:,k-1) - H*u_k(:,k) + K*s;
 end
-% strehl = mean(strehl);
-var_eps = mean(sigma);
+mean_eps = sum(eps(2:end),2)/T;
+var_eps = sum((eps(2:end) - mean_eps).^2,2)/T;
+var_eps = sqrt(sum(var_eps)/T);
 end
