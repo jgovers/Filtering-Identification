@@ -1,17 +1,15 @@
 function [var_eps] = AOloopMVM(G,H,C_phi0,SNR,phik);
-%% Generate measurement data
-sig_e = 10^(-SNR/10);
-s = awgn(G*phik,SNR);    
-%% Initialise matrices
+%% System information
+sig_e = sqrt(10^(-SNR/10));  
 M = C_phi0*G'/(G*C_phi0*G'+sig_e^2*eye(72));
-n = size(H,1);      % dimension lifted wavefront
-ns = size(G,1);     % dimension lifted sensor slopes
-T = length(phik);   % number of temporal phase points
-eps = zeros(n,T);  % residual wavefront
-eps_piston_removed = zeros(n,T); % residual wavefront with mean removed
-sigma = zeros(T,1);
-u = zeros(n,T);
-vara = -log10(1)*10;
+%% Initialise matrices
+n = size(H,1);      % Dimension lifted wavefront
+ns = size(G,1);     % Dimension lifted sensor slopes
+T = length(phik);   % Number of temporal phase points
+eps = zeros(n,T);   % Residual wavefront
+phi_h = zeros(n,T); % Residual wavefront observer
+sigma = zeros(T,1); % System Variance
+u = zeros(n,T);     % Control action
 %% Control loop
 for k = 2:T
     %% System equations
