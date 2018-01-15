@@ -19,7 +19,7 @@ for k = 2:T
     phi_h(:,k) = M*s;
     u(:,k) = u(:,k-1) + H\phi_h(:,k);
     %% Variance
-    sigma(k) = var(eps(:,k)-mean(eps(:,k)));    
+    sigma(k) = var(eps(:,k) - mean(eps(:,k)));
 end
 var_eps = mean(sigma);
 end
