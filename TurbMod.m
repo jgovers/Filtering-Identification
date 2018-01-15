@@ -36,14 +36,24 @@ toc
 % end
 % fprintf('\n')
 % toc
-%% Kalman
-fprintf('\nKalman filter:\n')
+% %% Kalman
+% fprintf('\nKalman filter:\n')
+% for i = 1:size(phiIdent,2)
+%     phi = phiIdent{i};
+%     C_phi0 = cov(phi');
+%     C_phi1 = covariance(phi,1,mphi);
+%     sig_e   = sqrt(10^(-SNR/10));
+%     [var_k(i)] = AOloopAR(G,H,C_phi0,C_phi1,sig_e,phi);
+%     fprintf('.')
+% end
+% fprintf('\n')
+% toc
+%% Subspace Identification
+fprintf('\nSubspace Identification:\n')
 for i = 1:size(phiIdent,2)
-    phik = phiIdent{i};
-    C_phi0 = cov(phik');
-    C_phi1 = covariance(phik,1,mphi);
-    sig_e   = sqrt(10^(-SNR/10));
-    [var_k(i)] = AOloopAR(G,H,C_phi0,C_phi1,sig_e,phik);
+    phi = phiIdent{i};
+    [A,C,K,vaf] = N4sid(sk,Nid,Nval,s,n);
+    [var_si(i)] = phiSid(G,H,A,K,C,SNR,lambda,phi);
     fprintf('.')
 end
 fprintf('\n')
