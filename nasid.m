@@ -19,7 +19,7 @@ semilogy(sv,'o')
 Xh = sqrt(S(1:n,1:n))*V(:,1:n)';
 Xh_N1 = Xh(:,1:end-1);
 Xh_s1 = Xh(:,2:end);
-%% System matrices
+%% System matrices DIT IS KUT
 M = (Xh_N1*Xh_N1')\Xh_N1;
 At = (M*Xh_s1')';
 Ys1N = henk(phi,s,1,Nid-1);
@@ -33,7 +33,7 @@ R = 1/Nid*V*V';
 %% Kalman filter
 [X,L,K_t] = dare(At',Ct',Q,R,S);
 K = K_t';
-%% Model simulation
+%% Model simulation DIT IS KUT
 xh = zeros(n,Nval);
 yh = zeros(r,Nval);
 xh(:,1) = Ct\phi(:,1);
@@ -45,5 +45,5 @@ end
 %% Model validation
 y = phi(:,1:Nval);
 yd = y - yh;
-vaf = max(0,(1-1/Nval*sum(yd.*yd)/(1/Nval*sum(y.*y)))*100);
+vaf = max(0,(1-1/Nval*sum(sum(yd.*yd)))/(1/Nval*sum(sum(y.*y))))*100);
 end
