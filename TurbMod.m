@@ -50,13 +50,16 @@ toc
 % toc
 %% Subspace Identification
 fprintf('\nSubspace Identification:\n')
+% Settings
 Nid = 2000;
 Nval = 500;
 s = 25;
 n = 11;
+lambda = 0;
+% Controller
 for i = 1:size(phiIdent,2)
     phi = phiIdent{i};
-    [A,C,K,vaf] = N4sid(sk,Nid,Nval,s,n);
+    [A,C,K,vaf] = nasid(phi,Nid,Nval,s,n);
     [var_si(i)] = phiSid(G,H,A,K,C,SNR,lambda,phi);
     fprintf('.')
 end

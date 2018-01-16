@@ -1,5 +1,5 @@
 function [At,Ct,K,vaf] = nasid(phi,Nid,Nval,s,n)
-%% Data properties
+%% Data size
 [r,m] = size(phi);
 %% Henkel matrices
 YssN = henk(phi,s,s,Nid);
@@ -11,11 +11,6 @@ R22 = R(1:r*s,1:r*s);
 R32 = R(r*s+1:2*r*s,1:r*s);
 %% SVD factorization
 [U,S,V] = svd(R32/R22*Y0sN);
-for i=1:size(S,1)
-    sv(i) = S(i,i);
-end
-close all
-semilogy(sv,'o')
 %% X estimate
 Xh = sqrt(S(1:n,1:n))*V(:,1:n)';
 Xh_N1 = Xh(:,1:end-1);
@@ -45,8 +40,4 @@ for i = 1:Nval-1
 end
 %% Model validation
 vaf = (1-(var(phi(:,1:Nval) - yh)/var(phi(:,1:Nval))))*100;
-figure
-plot(phi(1,1:Nval))
-hold on
-plot(yh(1,:))
 end
