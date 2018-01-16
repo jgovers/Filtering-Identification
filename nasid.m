@@ -14,12 +14,13 @@ R32 = R(r*s+1:2*r*s,1:r*s);
 for i=1:size(S,1)
     sv(i) = S(i,i);
 end
+close all
 semilogy(sv,'o')
 %% X estimate
 Xh = sqrt(S(1:n,1:n))*V(:,1:n)';
 Xh_N1 = Xh(:,1:end-1);
 Xh_s1 = Xh(:,2:end);
-%% System matrices DIT IS KUT
+%% System matrices
 M = (Xh_N1*Xh_N1')\Xh_N1;
 At = (M*Xh_s1')';
 Ys1N = henk(phi,s,1,Nid-1);
@@ -39,11 +40,16 @@ yh = zeros(r,Nval);
 xh(:,1) = Ct\phi(:,1);
 yh(:,1) = phi(:,1);
 for i = 1:Nval-1
-    xh(:,i+1) = At*xh(:,i);
-    yh(:,i) = Ct*xh(:,i);
+    v = wgn(r,1,0);
+    xh(:,i+1) = At*xh(:,i) + K*v;
+    yh(:,i) = Ct*xh(:,i) + v;
 end
 %% Model validation
 y = phi(:,1:Nval);
 yd = y - yh;
-vaf = max(0,(1-1/Nval*sum(sum(yd.*yd)))/(1/Nval*sum(sum(y.*y))))*100);
+vaf = (1-1/Nval*sum(sum(yd.*yd)))/(1/Nval*sum(sum(y.*y)))*100;
+figure
+plot(y(1,:))
+hold on
+plot(yh(1,:))
 end
