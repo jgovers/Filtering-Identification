@@ -48,24 +48,20 @@ toc
 % end
 % fprintf('\n')
 % toc
-% %% Subspace Identification
-% fprintf('\nSubspace Identification:\n')
-% for i = 1:size(phiIdent,2)
-%     phi = phiIdent{i};
-%     [A,C,K,vaf] = N4sid(sk,Nid,Nval,s,n);
-%     [var_si(i)] = phiSid(G,H,A,K,C,SNR,lambda,phi);
-%     fprintf('.')
-% end
-% fprintf('\n')
-% toc
-phi = phiIdent{1};
-Nid = 3500;
-Nval = 1500;
-s = 50;
-n = 25;
-
-[At,Ct,K,vaf] = nasid(phi,Nid,Nval,s,n)
-
+%% Subspace Identification
+fprintf('\nSubspace Identification:\n')
+Nid = 2000;
+Nval = 500;
+s = 25;
+n = 11;
+for i = 1:size(phiIdent,2)
+    phi = phiIdent{i};
+    [A,C,K,vaf] = N4sid(sk,Nid,Nval,s,n);
+    [var_si(i)] = phiSid(G,H,A,K,C,SNR,lambda,phi);
+    fprintf('.')
+end
+fprintf('\n')
+toc
 %% Plots
 % figure; hold on;
 % plot(var_nc); plot(var_rw); plot(var_k);

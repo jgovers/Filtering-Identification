@@ -3,7 +3,7 @@ function [At,Ct,K,vaf] = nasid(phi,Nid,Nval,s,n)
 [r,m] = size(phi);
 %% Henkel matrices
 YssN = henk(phi,s,s,Nid);
-Y0sN = henk(phi,0,s,Nid);
+Y0sN = henk(phi,1,s,Nid);
 %% QR factorization
 [Qt,Rt] = qr([Y0sN;YssN]');
 Q = Qt'; R = Rt';
@@ -28,28 +28,25 @@ Ct = (M*Ys1N')';
 %% Variance matrices
 W = Xh_s1 - At*Xh_N1;
 V = Ys1N - Ct*Xh_N1;
-Q = 1/Nid*W*W';
-S = 1/Nid*W*V';
-R = 1/Nid*V*V';
+Qc = 1/Nid*W*W';
+Sc = 1/Nid*W*V';
+Rc = 1/Nid*V*V';
 %% Kalman filter
-[X,L,K_t] = dare(At',Ct',Q,R,S);
+[X,L,K_t] = dare(At',Ct',Qc,Rc,Sc);
 K = K_t';
-%% Model simulation DIT IS KUT
+%% Model simulation
 xh = zeros(n,Nval);
 yh = zeros(r,Nval);
 xh(:,1) = Ct\phi(:,1);
 yh(:,1) = phi(:,1);
 for i = 1:Nval-1
-    v = wgn(r,1,0);
-    xh(:,i+1) = At*xh(:,i) + K*v;
-    yh(:,i) = Ct*xh(:,i) + v;
+    xh(:,i+1) = (At-K*Ct)*xh(:,i) + K*phi(:,i);
+    yh(:,i) = Ct*xh(:,i);
 end
 %% Model validation
-y = phi(:,1:Nval);
-yd = y - yh;
-vaf = (1-1/Nval*sum(sum(yd.*yd)))/(1/Nval*sum(sum(y.*y)))*100;
+vaf = (1-(var(phi(:,1:Nval) - yh)/var(phi(:,1:Nval))))*100;
 figure
-plot(y(1,:))
+plot(phi(1,1:Nval))
 hold on
 plot(yh(1,:))
 end
