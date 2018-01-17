@@ -1,5 +1,5 @@
 function [HssN] = henk(data,o,s,N)
-[n,m] = size(data);
+n = size(data,1);
 HssN = zeros(s*n,N);
 for i = 1:s
     for j = 1:N

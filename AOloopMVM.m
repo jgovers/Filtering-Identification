@@ -4,7 +4,6 @@ sig_e = sqrt(10^(-SNR/10));
 M = C_phi0*G'/(G*C_phi0*G'+sig_e^2*eye(72));
 %% Initialise matrices
 n = size(H,1);      % Dimension lifted wavefront
-ns = size(G,1);     % Dimension lifted sensor slopes
 T = length(phik);   % Number of temporal phase points
 eps = zeros(n,T);   % Residual wavefront
 phi_h = zeros(n,T); % Residual wavefront observer

@@ -1,7 +1,7 @@
 function [var_si] = phiSid(G,H,A,K,C,SNR,lambda,phi)
 %% Data size
 [s,l] = size(phi);
-[n,m] = size(A);
+n = size(A,1);
 %% Initialise matrices
 eps = zeros(s,l);   % Residual wavefront
 phi_h = zeros(s,l); % Residual wavefront observer

@@ -25,7 +25,7 @@ end
 fprintf('\n')
 toc
 %% Random walk model (3.6)
-fprintf('\nRandom Walk model:\n')
+fprintf('\nStatic Reconstruction:\n')
 sig_e   = sqrt(10^(-SNR/10));
 var_rw = zeros(size(phiIdent,2),1);
 for i = 1:size(phiIdent,2)
@@ -37,12 +37,13 @@ end
 fprintf('\n')
 toc
 %% Kalman filter
-fprintf('\nKalman filter:\n')
+fprintf('\nVar-1:\n')
 % Kalman gain
 C_phi0 = cov(phit');
 C_phi1 = covariance(phit,1,mphi);
 sig_e   = sqrt(10^(-SNR/10));
 [A,Cw,K] = computeKalmanAR(C_phi0,C_phi1,G,sig_e);
+var_k = zeros(size(phiIdent,2),1);
 % Control loop
 for i = 1:size(phiIdent,2)
     phi = phiIdent{i};
@@ -52,7 +53,7 @@ end
 fprintf('\n')
 toc
 %% Subspace Identification
-fprintf('\nSubspace Identification:\n')
+fprintf('\nSI N4SID:\n')
 % Settings
 Nid = 3500;
 Nval = 1500;
@@ -60,6 +61,7 @@ s = 17;
 n = 16;
 lambda = 0;
 % Controller
+var_si = zeros(size(phiIdent,2),1);
 for i = 1:size(phiIdent,2)
     phi = phiIdent{i};
     [A,C,K,vaf] = nasid(phi,Nid,Nval,s,n);
@@ -68,8 +70,9 @@ for i = 1:size(phiIdent,2)
 end
 fprintf('\n')
 toc
-% Plots
+%% Plots
 figure; hold on;
 plot(var_nc); plot(var_rw); plot(var_k);plot(var_si)
-legend('Var. Tur. Wav.','Var. Res. Wav. Random Walk model','Var. Res. Wav. Kalman filter','Var. Res. Wav. Subspace Identification')
-
+legend('No control','Static Reconstruction','VAR-1','SI N4SID')
+xlabel('Datasets')
+ylabel('Variance of Residual Wavefront')

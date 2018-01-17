@@ -13,5 +13,4 @@ end
 n = 8+yc;
 s = n+xc;
 minvaf = minM;
-%% first optimum [500,10,7,69]
 end

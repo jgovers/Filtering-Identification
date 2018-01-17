@@ -1,16 +1,21 @@
 function [At,Ct,K,vaf] = nasid(phi,Nid,Nval,s,n)
 %% Data size
-[r,m] = size(phi);
+r = size(phi,1);
 %% Henkel matrices
 YssN = henk(phi,s,s,Nid);
 Y0sN = henk(phi,1,s,Nid);
 %% QR factorization
 [Qt,Rt] = qr([Y0sN;YssN]');
 Q = Qt'; R = Rt';
-R22 = R(1:r*s,1:r*s);
-R32 = R(r*s+1:2*r*s,1:r*s);
+R11 = R(1:r*s,1:r*s);
+R21 = R(r*s+1:2*r*s,1:r*s);
 %% SVD factorization
-[U,S,V] = svd(R32/R22*Y0sN);
+[U,S,V] = svd(R21/R11*Y0sN);
+% for ii = 1:size(S,1)
+%     Sd(ii) = S(ii,ii);
+% end
+% figure
+% semilogy(Sd,'o')
 %% X estimate
 Xh = sqrt(S(1:n,1:n))*V(:,1:n)';
 Xh_N1 = Xh(:,1:end-1);

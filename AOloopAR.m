@@ -2,9 +2,9 @@ function [var_eps] = AOloopAR(G,H,A,Cw,K,sig_e,phik)
 %% Initialising Matrices
 n = size(H,1);          % State dimension 
 ns = size(G,1);         % Output dimension
-T = length(phik);     % Number of temporal phase points
-eps_h = zeros(n,T);     % Residual wavefront with stochast
-eps = zeros(n,T);       % Residual wavefront with mean removed
+T = length(phik);       % Number of temporal phase points
+eps_h = zeros(n,T);     % Residual wavefront estimate
+eps = zeros(n,T);       % Residual wavefront 
 sigma = zeros(T,1);     % Variance of each residual wavefront measurement vector
 u_k = zeros(n,T);       % Optimal control action
 %% System Information
