@@ -34,8 +34,9 @@ xh = zeros(n,Nval);
 yh = zeros(r,Nval);
 xh(:,1) = Ct\phi(:,1);
 yh(:,1) = phi(:,1);
+AKC = At-K*Ct;
 for i = 1:Nval-1
-    xh(:,i+1) = (At-K*Ct)*xh(:,i) + K*phi(:,i);
+    xh(:,i+1) = AKC*xh(:,i) + K*phi(:,i);
     yh(:,i) = Ct*xh(:,i);
 end
 %% Model validation
